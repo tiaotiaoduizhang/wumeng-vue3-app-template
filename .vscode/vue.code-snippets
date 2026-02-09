@@ -1,0 +1,22 @@
+{
+  "Vue 3 + TypeScript": {
+    "scope": "vue",
+    "prefix": "v3ts",
+    "body": [
+      "<script setup lang=\"ts\">",
+      "",
+      "</script>",
+      "",
+      "<template>",
+      "  <div class=\"$1\">",
+      "    $0",
+      "  </div>",
+      "</template>",
+      "",
+      "<style scoped>",
+      "",
+      "</style>"
+    ],
+    "description": "Vue 3 Composition API with TypeScript template"
+  }
+}
