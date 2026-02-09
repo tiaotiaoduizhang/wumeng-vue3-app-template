@@ -14,3 +14,9 @@
   > 自动扫描并按需加载组件。在模板中直接使用 `src/components` 下的组件或 UI 库组件，无需手动 import 和注册。
 - vite-plugin-vue-layouts  基于文件系统的布局插件
   > 配合文件路由使用，支持多种布局模式（如默认布局、空白布局）。通过在页面组件中添加 `<route lang="yaml">` 块来指定布局。
+
+# pinia 状态管理
+- storeToRefs 是 Pinia 提供的一个辅助函数，用于 解构 Store 中的状态（State）和计算属性（Getters）时保持其响应性 。
+ > 如果不使用，解构出的变量会丢失响应性 
+ > 只用于状态（state，getters）不用于方法（actions_函数）可以直接解构，不需要用 storeToRefs ，因为函数本身不需要响应性。
+ > 错误用法 const { counter } = demoStore 
