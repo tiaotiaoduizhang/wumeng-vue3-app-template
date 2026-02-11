@@ -20,3 +20,27 @@
  > 如果不使用，解构出的变量会丢失响应性 
  > 只用于状态（state，getters）不用于方法（actions_函数）可以直接解构，不需要用 storeToRefs ，因为函数本身不需要响应性。
  > 错误用法 const { counter } = demoStore 
+
+# CSS 预处理器 - SCSS
+常见的css构架模式:
+- BEM 最通用的命名规范，核心解决
+- ACSS （如tailwind）是高效开发模式，最小粒度互用，适合快速迭代的项目
+- ITCSS/SMACSS 侧重文件 / 样式分类，适合超大型项目的长期维护
+>核心思想：按 “特异性（Specificity）” 从低到高、“作用域” 从全局到局部的顺序组织 CSS 文件，形成倒三角结构，避免样式覆盖和优先级问题。
+- OOCSS 
+>核心思想：将 CSS 样式视为可复用的 “对象”，核心是分离结构（Structure）和皮肤（Skin）、分离容器（Container）和内容（Content）。
+
+
+- settings （设计令牌）
+ > 样式变量的定义，如颜色值，尺寸，字体大小等基础变量
+- base （全局通用的定制化样式）
+ > 覆盖 Element Plus、VXE Table 的默认样式
+ > 设置 html、body 的样式
+- components （自定义的组件的样式，每个组件自行维护，不需要抽取到公共目录中）
+ >  采用ACSS模式，具体实现使用 UnoCSS
+
+ - src/plugins/assets.ts
+ > 为了保持 main.ts的简洁，创建一个专门的资源管理模块，统一处理所有静态资源的导入：
+ 
+ - 高性能、可定制的原子化 CSS 框架
+ > 采用 UnoCSS ，无需手动编写 CSS 类名，直接在模板中使用原子类即可。

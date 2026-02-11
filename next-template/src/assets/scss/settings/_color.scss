@@ -1,0 +1,77 @@
+
+@use "sass:color";
+// 品牌与状态色
+$wm-color-primary: #1c9399; // 品牌主色 (用于主按钮、高亮状态等)
+$wm-color-success: #3dbe7d; // 成功状态 (用于成功提示、完成操作等)
+$wm-color-warning: #ffb74d; // 警告状态 (用于警示信息、重要提示等)
+$wm-color-danger: #f1524c; // 危险/错误状态 (用于错误提示、删除操作等)
+$wm-color-info: #5e7ce0; // 信息/引导状态 (用于辅助信息、引导提示等)
+
+// 中性色 - 文字
+$wm-color-text-primary: #303133; // 主要文字 (标题、正文等)
+$wm-color-text-regular: #606266; // 常规文字 (正文、标签等)
+$wm-color-text-secondary: #909399; // 次要文字 (说明、辅助信息)
+$wm-color-text-placeholder: #a8abb2; // 占位文字 (输入框 placeholder)
+$wm-color-text-disabled: #c0c4cc;
+
+// 中性色 - 边框
+$wm-border-color-base: #dcdfe6; // 主要边框 (用于主要元素、容器等)
+$wm-border-color-light: #e4e7ed; // 常规边框 (用于次要元素、分隔线等)
+
+// 中性色 - 背景
+$wm-bg-color-page: #f5f7fa; // 页面背景 (整体底色)
+$wm-bg-color-base: #ffffff; // 基础背景 (卡片、弹窗底色)
+
+// 默认主题 白天模式
+:root {
+  // 品牌/状态色及其色阶
+  // 1. 遍历主要的 5 种品牌色 (primary, success, danger...)
+  @each $type, $color in (primary, $wm-color-primary), (success, $wm-color-success),
+    (danger, $wm-color-danger), (warning, $wm-color-warning), (info, $wm-color-info)
+  {
+    // 生成基本变量 --wm-color-#primary：#1c9399
+    --wm-color-#{$type}: #{$color};
+    //2 生成浅色变体 (混合白色) 计算不同程度混入白色的结果
+    @each $i in (1, 2, 3, 5, 7, 8, 9) {
+      --wm-color-#{$type}-light-#{$i}: #{color.mix(#fff, $color, $i * 10%)};
+    }
+
+    // 3.生成深色变体 (混合黑色)计算混入黑色的结果，用于 active 点击态
+    @each $i in (1, 2) {
+      --wm-color-#{$type}-dark-#{$i}: #{color.mix(#000, $color, $i * 10%)};
+    }
+  }
+  /**
+   * 用途:映射中性色变量 把 Sass 变量（ $var ）转印成 CSS 变量（ --var ）
+   * 作用: 
+   * 1. 让浏览器运行时也能访问这些颜色。
+   * 2. Sass 变量编译后就消失了，变成固定颜色值。
+   * 3. CSS 变量（ --xxx ）可以在浏览器中通过 JS 动态修改，或者通过 CSS 媒体查询（如深色模式）实时切换
+   */
+  // 文字
+  --wm-color-text-primary: #{$wm-color-text-primary};
+  --wm-color-text-regular: #{$wm-color-text-regular};
+  --wm-color-text-secondary: #{$wm-color-text-secondary};
+  --wm-color-text-placeholder: #{$wm-color-text-placeholder};
+  // 边框
+  --wm-border-color-base: #{$wm-border-color-base};
+  --wm-border-color-light: #{$wm-border-color-light};
+
+  // 背景
+  --wm-bg-color-base: #{$wm-bg-color-base};
+  --wm-bg-color-page: #{$wm-bg-color-page};
+
+  /**
+   * 用途:深色主题覆盖 （一键换肤）
+   * 作用: 覆盖之前的变量值
+   */
+  [data-theme='dark'] {
+    --wm-color-text-primary: rgba(255, 255, 255, 0.95);
+    --wm-color-text-regular: rgba(255, 255, 255, 0.75);
+    --wm-color-text-secondary: rgba(255, 255, 255, 0.55);
+    --wm-color-text-placeholder: rgba(255, 255, 255, 0.35);
+    --wm-bg-color-page: #121212;
+    --wm-bg-color-base: #1a1a1a;
+    --wm-border-color-base: rgba(255, 255, 255, 0.12);
+  }
+}
