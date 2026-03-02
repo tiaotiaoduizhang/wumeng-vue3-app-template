@@ -1,6 +1,15 @@
+/**
+ * 应用程序的 TypeScript 配置文件。
+ * @extends 继承配置 ：继承了 Vue 官方推荐的 DOM 环境基础配置
+ * @include 包含配置 ：指定了哪些文件属于这个项目，TS 会检查这些文件：
+ * @exclude 排除配置 ：排除了测试目录下的所有文件。
+ * @compilerOptions 编译选项配置 ：配置了 TypeScript 编译选项，包括输出文件路径、模块解析策略、路径映射等。
+ * @tsBuildInfoFile ：开启增量编译，将编译信息缓存在指定文件中，加快后续构建速度
+ * @paths ：配置了路径映射，将 @/* 映射到 src/*，方便在代码中使用（路径 @/替换../）。
+ */
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts","auto-imports.d.ts"],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

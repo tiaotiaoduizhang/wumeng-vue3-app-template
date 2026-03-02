@@ -18,15 +18,32 @@ import UnoCSS from 'unocss/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import VueRouter from 'unplugin-vue-router/vite'
 import Layouts from 'vite-plugin-vue-layouts'
+// 默认导入vue,pinia,vue-router
+import AutoImport from 'unplugin-auto-import/vite'
+/**
+ * 集成了自动路由，自动导入 Vue Router 相关的函数和类型。
+ * 例如，useRouter、useRoute 等。
+ */
+import { VueRouterAutoImports } from 'unplugin-vue-router'
 export default defineConfig({
   plugins: [
+    AutoImport({
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+        /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
+        /\.md$/, // .md
+      ],
+      imports: ['vue', VueRouterAutoImports, 'pinia'],
+    }),
     VueRouter({
       /* options */
     }),
     /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
-     Layouts({
+    Layouts({
       layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
-      defaultLayout: 'default' // 指定默认布局文件的名称
+      defaultLayout: 'default', // 指定默认布局文件的名称
     }),
     vue(),
     vueJsx(),
