@@ -5,3 +5,11 @@
 /// <reference types="vite/client" />
 /// <reference types="unplugin-vue-router/client" />
 /// <reference types="vite-plugin-vue-layouts/client" />
+interface ImportMetaEnv {
+  readonly VITE_APP_NAME: string
+  // 更多环境变量...
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}

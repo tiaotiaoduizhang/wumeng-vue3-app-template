@@ -1,3 +1,4 @@
+
 {
   "name": "next-template",
   "version": "0.0.0",
@@ -5,7 +6,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "vite --mode test",
+    "uat": "vite --mode uat",
+    "dev:prod": "vite --mode prod",
     "build": "run-p type-check \"build-only {@}\" --",
+    "build:uat": "run-p type-check \"build-only {@} --mode uat\" --",
+    "build:prod": "run-p type-check \"build-only {@} --mode prod\" --",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",

@@ -20,7 +20,7 @@ const router = createRouter({
   /**
    * 访问的路径外面又包裹了一层组件，需要修改 unplugin-vue-router自动生成的路由数组 routes
    */
-  routes:setupLayouts(routes),
+  routes:setupLayouts(routes as any),
   // routes: [{
   //   path: '/',
   //   name: 'demo',

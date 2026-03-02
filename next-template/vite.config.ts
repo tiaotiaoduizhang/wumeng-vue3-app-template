@@ -10,7 +10,7 @@
 路径稳定性	基于文件自身位置，不受执行目录影响	受执行 node 命令的目录影响   
 */
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -34,56 +34,67 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
  *  不开启则直接写 <Input />。
  */
 import Components from 'unplugin-vue-components/vite'
-export default defineConfig({
-  plugins: [
-    Components({
-      deep: true,
-      directoryAsNamespace: false,
-    }),
-    AutoImport({
-      include: [
-        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
-        /\.vue$/,
-        /\.vue\?vue/, // .vue
-        /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
-        /\.md$/, // .md
-      ],
-      imports: ['vue', VueRouterAutoImports, 'pinia', '@vueuse/core'],
-    }),
-    VueRouter({
-      /* options */
-    }),
-    /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
-    Layouts({
-      layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
-      defaultLayout: 'default', // 指定默认布局文件的名称
-    }),
-    vue(),
-    vueJsx(),
-    // vueDevTools(),
-    UnoCSS(),
-    // 配置svg图标
-    createSvgIconsPlugin({
-      // SVG 图标目录
-      iconDirs: [fileURLToPath(new URL('./src/assets/icons', import.meta.url))],
-      /**
-       * 生成的 symbol ID 格式
-       * icon-固定前缀，你可以随意修改
-       * [dir] ： 目录名占位符src/assets/icons常会被忽略 其他的就需要配置
-       * [name]：文件名占位符
-       * eg:src/assets/icons/home.svg  #icon-home
-       * src/assets/icons/nav/top/logo.svg  #icon-nav-top-logo
-       */
-      symbolId: 'icon-[dir]-[name]',
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+
+export default defineConfig(({ mode }) => {
+  /**
+   * 在配置中使用环境变量
+   * 第一个参数 mode 表示当前的模式（例如 'development' 或 'production'）。
+   * 第二个参数 process.cwd() 表示当前工作目录，通常是项目根目录。
+   * 第三个参数 '' 表示不使用前缀，直接加载所有环境变量。
+   */
+  const env = loadEnv(mode, process.cwd(), '')
+  console.log('env', env)
+  return {
+    plugins: [
+      Components({
+        deep: true,
+        directoryAsNamespace: false,
+      }),
+      AutoImport({
+        include: [
+          /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+          /\.vue$/,
+          /\.vue\?vue/, // .vue
+          /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
+          /\.md$/, // .md
+        ],
+        imports: ['vue', VueRouterAutoImports, 'pinia', '@vueuse/core'],
+      }),
+      VueRouter({
+        /* options */
+      }),
+      /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
+      Layouts({
+        layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
+        defaultLayout: 'default', // 指定默认布局文件的名称
+      }),
+      vue(),
+      vueJsx(),
+      // vueDevTools(),
+      UnoCSS(),
+      // 配置svg图标
+      createSvgIconsPlugin({
+        // SVG 图标目录
+        iconDirs: [fileURLToPath(new URL('./src/assets/icons', import.meta.url))],
+        /**
+         * 生成的 symbol ID 格式
+         * icon-固定前缀，你可以随意修改
+         * [dir] ： 目录名占位符src/assets/icons常会被忽略 其他的就需要配置
+         * [name]：文件名占位符
+         * eg:src/assets/icons/home.svg  #icon-home
+         * src/assets/icons/nav/top/logo.svg  #icon-nav-top-logo
+         */
+        symbolId: 'icon-[dir]-[name]',
+      }),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-  },
-  server: {
-    // 监听所有地址，包括局域网和公网地址
-    host: true,
-  },
+    server: {
+      // 监听所有地址，包括局域网和公网地址
+      host: true,
+    },
+  }
 })
