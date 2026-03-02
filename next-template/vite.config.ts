@@ -16,8 +16,13 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import UnoCSS from 'unocss/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import VueRouter from 'unplugin-vue-router/vite'
 export default defineConfig({
   plugins: [
+    VueRouter({
+      /* options */
+    }),
+    /* VueRouter() 插件需要在 Vue() 插件之前进行注册 */
     vue(),
     vueJsx(),
     vueDevTools(),

@@ -58,3 +58,10 @@
   - UnoCSS Icon （本质上也是 Iconify Icon）
   - 本地 svg 图标
   - 本地或在线的 Iconfont
+
+  # 路由配置  （  unplugin-vue-router ：基于文件系统的自动路由解决方案）
+  - 官方钦定的 “路由增强套件”，覆盖路由全生命周期
+  - 跨构建工具（Vite/Rollup/esbuild/webpack）
+  - 支持 TypeScript 类型系统
+  - 文档地址：https://uvr.esm.is/
+  - 2026/3/2目前不支持vue-router@5版本需要进行降级 pnpm add vue-router@4.6.2
