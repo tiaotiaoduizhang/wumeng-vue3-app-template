@@ -17,15 +17,20 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import UnoCSS from 'unocss/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import VueRouter from 'unplugin-vue-router/vite'
+import Layouts from 'vite-plugin-vue-layouts'
 export default defineConfig({
   plugins: [
     VueRouter({
       /* options */
     }),
-    /* VueRouter() 插件需要在 Vue() 插件之前进行注册 */
+    /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
+     Layouts({
+      layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
+      defaultLayout: 'default' // 指定默认布局文件的名称
+    }),
     vue(),
     vueJsx(),
-    vueDevTools(),
+    // vueDevTools(),
     UnoCSS(),
     // 配置svg图标
     createSvgIconsPlugin({

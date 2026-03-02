@@ -1,6 +1,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes,handleHotUpdate } from 'vue-router/auto-routes'
+import { setupLayouts } from 'virtual:generated-layouts'
 /**
  * @createRouter 创建路由实现
  * @reateWebHistory （html5模式）url不带#号
@@ -16,7 +17,10 @@ import type {App} from 'vue'
  */
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes, 
+  /**
+   * 访问的路径外面又包裹了一层组件，需要修改 unplugin-vue-router自动生成的路由数组 routes
+   */
+  routes:setupLayouts(routes),
   // routes: [{
   //   path: '/',
   //   name: 'demo',

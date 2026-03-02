@@ -65,3 +65,6 @@
   - 支持 TypeScript 类型系统
   - 文档地址：https://uvr.esm.is/
   - 2026/3/2目前不支持vue-router@5版本需要进行降级 pnpm add vue-router@4.6.2
+  - 好基友：vite-plugin-vue-layouts
+  - vite-plugin-vue-layouts 存在兼容版本问题 且没有更新
+  替代方案：vue-router-layouts，unplugin-vue-layouts
