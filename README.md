@@ -68,3 +68,13 @@
   - 好基友：vite-plugin-vue-layouts
   - vite-plugin-vue-layouts 存在兼容版本问题 且没有更新
   替代方案：vue-router-layouts，unplugin-vue-layouts
+
+  #  自动导入插件（unplugin-auto-import）
+  > 自动导入 Vue、Vue Router、Pinia 等常用 API（如 `ref`, `computed`, `useRouter`），解放双手，无需在每个文件中手动 import。
+
+  # 集成 vueuse （常用的 vue 组合式 api 工具库）
+  - 提供大量的hooks
+  - git链接：https://v4-11-2.vueuse.org/
+
+  # unplugin-vue-components  组件自动注册插件
+  git链接：https://github.com/unplugin/unplugin-vue-components

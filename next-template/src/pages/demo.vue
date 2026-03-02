@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Icon from '@/components/icon/ico.vue'
 const toggleTheme = () => {
   const html = document.documentElement
   const currentTheme = html.getAttribute('data-theme')

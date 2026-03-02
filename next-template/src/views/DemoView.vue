@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from '@/components/icon/ico.vue'
+const msg = ref('Hello world')
 const toggleTheme = () => {
   const html = document.documentElement
   const currentTheme = html.getAttribute('data-theme')
@@ -9,6 +9,7 @@ const toggleTheme = () => {
 
 <template>
   <div class="p-md">
+    <div>{{ msg }}</div>
     <div class="demo mb-md">4种图标测试</div>
     <icon type="uno" icon="i-line-md:arrow-down-circle" class="size-8 text-primary" />
     <icon type="svg" icon="demo" class="text-primary size-8!" />

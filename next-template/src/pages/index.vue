@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import Icon from '@/components/icon/ico.vue'
-const toggleTheme = () => {
-  const html = document.documentElement
-  const currentTheme = html.getAttribute('data-theme')
-  html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark')
-}
+const msg = ref('Hello world')
+// const toggleTheme = () => {
+//   const html = document.documentElement
+//   const currentTheme = html.getAttribute('data-theme')
+//   html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark')
+// }
+
+const isDark = useDark({
+  selector: 'html', // 目标元素：将属性添加到 <html> 标签上
+  attribute: 'data-theme', // 属性名：使用 data-theme 属性来标识主题
+  valueDark: 'dark', // 暗黑值：暗黑模式时，设置 
+  valueLight: 'light', // 亮色值：亮色模式时，设置 
+})
+
+const toggleDark = useToggle(isDark)
 </script>
 
 <template>
   <div class="p-md">
+    <div>{{ msg }}</div>
     <div class="demo mb-md">4种图标测试</div>
     <icon type="uno" icon="i-line-md:arrow-down-circle" class="size-8 text-primary" />
     <icon type="svg" icon="demo" class="text-primary size-8!" />
@@ -30,9 +40,8 @@ const toggleTheme = () => {
       <div class="text-3xl text-text-secondary">测试文字 (Text Secondary 3XL)</div>
     </div>
 
-    <button class="mt-xl px-md py-sm border rounded-base cursor-pointer" @click="toggleTheme">
-      切换深色/浅色模式
-    </button>
+    <div>isDark: {{ isDark }}</div>
+     <button @click="toggleDark()">Toggle</button>
   </div>
 </template>
 

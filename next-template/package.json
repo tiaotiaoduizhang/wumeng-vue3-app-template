@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@iconify/json": "^2.2.438",
+    "@vueuse/core": "^14.2.1",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
     "vue": "^3.5.27",
@@ -40,6 +41,7 @@
     "typescript": "~5.9.3",
     "unocss": "^66.6.0",
     "unplugin-auto-import": "^21.0.0",
+    "unplugin-vue-components": "^31.0.0",
     "unplugin-vue-router": "^0.19.2",
     "vite": "^5.4.21",
     "vite-plugin-svg-icons": "^2.0.1",

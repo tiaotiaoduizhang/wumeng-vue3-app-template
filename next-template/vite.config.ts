@@ -25,8 +25,21 @@ import AutoImport from 'unplugin-auto-import/vite'
  * 例如，useRouter、useRoute 等。
  */
 import { VueRouterAutoImports } from 'unplugin-vue-router'
+/**
+ * 组件自动化配置
+ *  @deep 是否递归扫描子目录（默认：true）
+ *  @directoryAsNamespace  开启「目录作为命名空间」
+ *  组件路径：src/components/Form/Input.vue
+ *  开启 directoryAsNamespace: true 后，使用时需写 <FormInput />（目录名 + 组件名）；
+ *  不开启则直接写 <Input />。
+ */
+import Components from 'unplugin-vue-components/vite'
 export default defineConfig({
   plugins: [
+    Components({
+      deep: true,
+      directoryAsNamespace: false,
+    }),
     AutoImport({
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
@@ -35,7 +48,7 @@ export default defineConfig({
         /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
         /\.md$/, // .md
       ],
-      imports: ['vue', VueRouterAutoImports, 'pinia'],
+      imports: ['vue', VueRouterAutoImports, 'pinia', '@vueuse/core'],
     }),
     VueRouter({
       /* options */
