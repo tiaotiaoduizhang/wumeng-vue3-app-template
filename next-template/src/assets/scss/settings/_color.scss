@@ -61,12 +61,14 @@ $wm-bg-color-base: #ffffff; // 基础背景 (卡片、弹窗底色)
   --wm-bg-color-base: #{$wm-bg-color-base};
   --wm-bg-color-page: #{$wm-bg-color-page};
 
+
+}
   /**
    * 用途:深色主题覆盖 （一键换肤）
    * 作用: 覆盖之前的变量值
    */
-  [data-theme='dark'] {
-    --wm-color-text-primary: rgba(255, 255, 255, 0.95);
+[data-theme="dark"]{
+    --wm-color-text-primary: rgba(255, 255, 255, 0.9);
     --wm-color-text-regular: rgba(255, 255, 255, 0.75);
     --wm-color-text-secondary: rgba(255, 255, 255, 0.55);
     --wm-color-text-placeholder: rgba(255, 255, 255, 0.35);
@@ -74,4 +76,3 @@ $wm-bg-color-base: #ffffff; // 基础背景 (卡片、弹窗底色)
     --wm-bg-color-base: #1a1a1a;
     --wm-border-color-base: rgba(255, 255, 255, 0.12);
   }
-}

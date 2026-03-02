@@ -8,14 +8,29 @@
  * presets 预设
  */
 
-import { defineConfig, presetUno, transformerDirectives, transformerVariantGroup } from 'unocss'
+import {
+  defineConfig,
+  presetWind4,
+  presetIcons,
+  transformerDirectives,
+  transformerVariantGroup,
+} from 'unocss'
 
 // UnoCSS 默认预设 (presetUno) 已经包含了 Tailwind 兼容性
 // 目前 UnoCSS 尚未发布专门针对 Tailwind 4.0 的独立预设
 // presetUno 会持续更新以跟进 Tailwind 的新特性
 export default defineConfig({
   presets: [
-    presetUno(),
+    presetWind4({
+      preflights: { reset: true },
+    }),
+    presetIcons({
+      prefix: 'i-',
+      extraProperties: {
+        display: 'inline-block',
+        'vertical-align': 'middle',
+      },
+    }),
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   theme: {

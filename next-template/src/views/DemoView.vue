@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon from '@/components/icon/ico.vue'
 const toggleTheme = () => {
   const html = document.documentElement
   const currentTheme = html.getAttribute('data-theme')
@@ -8,8 +9,16 @@ const toggleTheme = () => {
 
 <template>
   <div class="p-md">
-    <div class="demo mb-md">Hello world</div>
-    
+    <div class="demo mb-md">4种图标测试</div>
+    <icon type="uno" icon="i-line-md:arrow-down-circle" class="size-8 text-primary" />
+    <icon type="svg" icon="demo" class="text-primary size-8!" />
+    <!-- 浏览器中渲染css,然后.icon-mobiletao:before 这个ico改为mobiletao -->
+    <icon
+      type="iconfont"
+      font-url="//at.alicdn.com/t/c/font_3457715_h47rhjpli3n.css"
+      icon="mobiletao"
+      class="text-primary text-2xl!"
+    />
     <div class="flex flex-col gap-sm">
       <div class="text-xs text-primary">测试文字 (Primary XS)</div>
       <div class="text-sm text-success">测试文字 (Success SM)</div>
@@ -21,10 +30,7 @@ const toggleTheme = () => {
       <div class="text-3xl text-text-secondary">测试文字 (Text Secondary 3XL)</div>
     </div>
 
-    <button 
-      class="mt-xl px-md py-sm border rounded-base cursor-pointer" 
-      @click="toggleTheme"
-    >
+    <button class="mt-xl px-md py-sm border rounded-base cursor-pointer" @click="toggleTheme">
       切换深色/浅色模式
     </button>
   </div>

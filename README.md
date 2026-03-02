@@ -44,3 +44,17 @@
  
  - 高性能、可定制的原子化 CSS 框架
  > 采用 UnoCSS ，无需手动编写 CSS 类名，直接在模板中使用原子类即可。
+
+# CSS 图标依赖（4种方案）
+- iconify-icon  图标库
+>链接： https://icon-sets.iconify.design/
+
+- 本地SVG图标
+> 本地 SVG 图标存储在 `src/assets/icons` 目录下，文件名作为图标名称。
+> 例如：`src/assets/icons/demo.svg` 对应的图标名称为 `demo`。
+
+- 封装强大图标组件，支持4种方式 
+  - Iconify Icon
+  - UnoCSS Icon （本质上也是 Iconify Icon）
+  - 本地 svg 图标
+  - 本地或在线的 Iconfont
