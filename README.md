@@ -108,3 +108,12 @@
     2）.env.[mode]
     3）.env.local
     4）.env
+
+ # 国际化（vue i18n）
+ - 地址：https://vue-i18n.intlify.dev
+ - src/i18n/
+    |- index.ts        # 国际化配置文件
+    |- locales/        # 语言包目录
+       |- zh-CN.ts     # 中文语言包
+       |- en-US.ts     # 英文语言包
+在template中可以使用 $t 函数进行翻译
