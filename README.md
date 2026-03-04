@@ -112,8 +112,21 @@
  # 国际化（vue i18n）
  - 地址：https://vue-i18n.intlify.dev
  - src/i18n/
-    |- index.ts        # 国际化配置文件
-    |- locales/        # 语言包目录
-       |- zh-CN.ts     # 中文语言包
-       |- en-US.ts     # 英文语言包
+    |- index.ts        # 国际化配置文件
+    |- locales/        # 语言包目录
+      |- zh-CN.ts     # 通用中文语言包
+      |- en-US.ts     # 通用英文语言包
+      |- modules/      # 模块语言包
+        |- en-US/     # 模块英文语言包
+           |- demo.ts    # 测试模块
+           |- ... 其他模块的英文
+        |- zh-CN/     # 模块中文语言包
+           |- demo.ts    # 测试模块
+           |- ... 其他模块的中文
 在template中可以使用 $t 函数进行翻译
+
+ # 国际化 企业级开发 插件
+ @intlify/unplugin-vue-i18n
+ - 路由级别的懒加载：
+   - 根据当前路由动态加载对应的语言模块。
+ - 实现语言的动态切换和持久化并实现语言包的动态懒加载和路由级别的按需加载  

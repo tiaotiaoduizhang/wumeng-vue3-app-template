@@ -37,6 +37,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/demo1': RouteRecordInfo<
+      '/demo1',
+      '/demo1',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
   }
 
   /**
@@ -59,6 +66,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/demo.vue': {
       routes:
         | '/demo'
+      views:
+        | never
+    }
+    'src/pages/demo1.vue': {
+      routes:
+        | '/demo1'
       views:
         | never
     }

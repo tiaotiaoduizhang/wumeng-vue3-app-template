@@ -46,8 +46,9 @@ const languages = [
  * 切换语言的处理函数
  * @param lang 目标语言代码 (如 'zh-CN', 'en-US')
  */
-const onChangeLanguage = (lang: string) => {
-  console.log('切换到语言:', lang)
+const onChangeLanguage = async (lang: string) => {
+  // 加载语言包
+  await loadLanguage(lang)
   // 修改 locale.value 会自动触发整个应用所有使用 t/$t 的地方重新渲染
   locale.value = lang
 }

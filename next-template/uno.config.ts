@@ -74,15 +74,13 @@ export default defineConfig({
       xl: 'var(--wm-border-radius-xl)',
     },
   },
-  rules: [
-    ...['primary', 'success', 'warning', 'danger', 'info'].flatMap((color) => [
+  rules: ['primary', 'success', 'warning', 'danger', 'info'].flatMap((color) => [
       [`bg-${color}-light-3`, { 'background-color': `var(--wm-color-${color}-light-3)` }],
       [`bg-${color}-light-5`, { 'background-color': `var(--wm-color-${color}-light-5)` }],
       [`bg-${color}-light-7`, { 'background-color': `var(--wm-color-${color}-light-7)` }],
       [`bg-${color}-light-9`, { 'background-color': `var(--wm-color-${color}-light-9)` }],
       [`text-${color}-dark-2`, { color: `var(--wm-color-${color}-dark-2)` }],
     ]),
-  ],
   shortcuts: {
     'flex-center': 'flex justify-center items-center',
     'flex-col-center': 'flex flex-col justify-center items-center',

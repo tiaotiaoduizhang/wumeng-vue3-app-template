@@ -10,10 +10,10 @@
 路径稳定性	基于文件自身位置，不受执行目录影响	受执行 node 命令的目录影响   
 */
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
+import path from 'node:path'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import vueDevTools from 'vite-plugin-vue-devtools'
 import UnoCSS from 'unocss/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import VueRouter from 'unplugin-vue-router/vite'
@@ -34,18 +34,27 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
  *  不开启则直接写 <Input />。
  */
 import Components from 'unplugin-vue-components/vite'
-
-export default defineConfig(({ mode }) => {
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+console.log(URL, 1111, path)
+export default defineConfig(({ mode: _mode }) => {
   /**
    * 在配置中使用环境变量
    * 第一个参数 mode 表示当前的模式（例如 'development' 或 'production'）。
    * 第二个参数 process.cwd() 表示当前工作目录，通常是项目根目录。
-   * 第三个参数 '' 表示不使用前缀，直接加载所有环境变量。
+   * 如果需要读取 .env 文件，建议只读取 VITE_ 前缀变量，并避免打印敏感信息。
    */
-  const env = loadEnv(mode, process.cwd(), '')
-  console.log('env', env)
   return {
     plugins: [
+      VueI18nPlugin({
+        // 语言包目录
+        include: [path.resolve(__dirname, './src/locales/**')],
+        // 开发模式下也启动编译时处理(true：生产构建)
+        runtimeOnly: false,
+        // 仅使用组合式 API
+        compositionOnly: true,
+        // 是否安装 Vue I18n 提供的所有 API、组件
+        fullInstall: true,
+      }),
       Components({
         deep: true,
         directoryAsNamespace: false,
@@ -58,11 +67,13 @@ export default defineConfig(({ mode }) => {
           /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
           /\.md$/, // .md
         ],
+        dirs: ['src/il8n'],
         imports: ['vue', VueRouterAutoImports, 'pinia', '@vueuse/core'],
       }),
       VueRouter({
         /* options */
       }),
+      
       /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
       Layouts({
         layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
@@ -70,7 +81,6 @@ export default defineConfig(({ mode }) => {
       }),
       vue(),
       vueJsx(),
-      // vueDevTools(),
       UnoCSS(),
       // 配置svg图标
       createSvgIconsPlugin({
