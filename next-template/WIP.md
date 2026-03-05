@@ -5,6 +5,9 @@
 - [x] 禁用 ESLint vue/multi-word-component-names 规则 <!-- id: 2 -->
 - [ ] 理解并集成 unplugin 生态插件 (unplugin-vue-router, auto-import, components, layouts) <!-- id: 1 -->
 - [x] 创建 VS Code Vue 模板代码片段 (vue.code-snippets) <!-- id: 0 -->
+- [x] 理解 Mock.js `@ctitle(5, 10)` 语法含义 <!-- id: 3 -->
+- [x] 理解 mock/demo.ts 中 success 与 error 的返回封装 <!-- id: 4 -->
+- [x] 为 mock/demo.ts 的 success/error 添加注释 <!-- id: 5 -->
 - 重构路由配置，采用 installRouter方法实现模块化注册 去掉 main.ts中 pinia 和 router 的相关代码
 - 封装 Pinia （1.创建 Pinia 实例，并配置持久化插件  2.将 Pinia 实例注册到 Vue 应用中）
 - npm list @iconify/json 查看是否安装

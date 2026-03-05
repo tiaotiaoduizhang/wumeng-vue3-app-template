@@ -130,3 +130,53 @@
  - 路由级别的懒加载：
    - 根据当前路由动态加载对应的语言模块。
  - 实现语言的动态切换和持久化并实现语言包的动态懒加载和路由级别的按需加载  
+
+# 网络请求 
+  - 封装架构设计
+  - 搭建mock服务
+  - axios和拦截器封装
+  - 实现取消请求和请求防重
+  - 实现请求重试
+  - useRequest封装
+  - Alova 和 Axios对比
+    - Alova 
+    - 链接：https://alova.vscing.com/examples
+    - 总结：前端专属库，聚焦前端业务场景，内置hooks，适配现在前端框架，主要适配浏览器端
+    - Axios
+    |- mock   //1.Mock服务:模拟后端接口
+        |-demo.ts
+    |- src
+        |-http  //3.项目配置层 （导出具体axios实例对象和CRUD函数，service层通过它调用后端接口）
+           |- core  //2.请求核心封装 （拦截器、取消请求、请求去重、重试，每个功能都是一个独立类）
+               |- http-clicent.ts
+               |- http-interceptors.ts
+               |- index.ts
+               |- types.ts
+            |- index.ts
+        |-services //server层 （调用具体接口）
+            |- base-service.ts
+      +---------------------+
+      | service层 (API 定义) |
+      +---------------------+
+                ↑
+                | 调用
+      +---------------------+
+      | 项目配置层 (自定义)    |
+      +---------------------+
+                ↑
+                | 实例化
+      +---------------------+
+      | 请求核心封装 (通用功能) |
+      +---------------------+
+                ↑
+                | 依赖
+      +---------------------+
+      |  Axios 原生库        |
+      +---------------------+
+  # 使用mockjs搭建mock服务
+  - 指令:pnpm add mockjs @types/mockjs vite-plugin-mock -D
+  - [核心模拟数据库](http://mockjs.com/)
+  - [MockJS 的 TypeScript 类型定义](https://github.com/nuysoft/Mock/wiki/Getting-Started)
+  - [Vite 适配的 Mock 插件](https://github.com/vbenjs/vite-plugin-mock/blob/main/README.zh_CN.md)
+  - 验证：http://192.168.30.77:5174/api/demo 
+  看见分页数据，mock服务成功

@@ -35,7 +35,7 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
  */
 import Components from 'unplugin-vue-components/vite'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-console.log(URL, 1111, path)
+import { viteMockServe } from 'vite-plugin-mock'
 export default defineConfig(({ mode: _mode }) => {
   /**
    * 在配置中使用环境变量
@@ -73,13 +73,17 @@ export default defineConfig(({ mode: _mode }) => {
       VueRouter({
         /* options */
       }),
-      
+
       /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
       Layouts({
         layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
         defaultLayout: 'default', // 指定默认布局文件的名称
       }),
       vue(),
+      viteMockServe({
+        mockPath: 'mock',
+        enable: true,
+      }),
       vueJsx(),
       UnoCSS(),
       // 配置svg图标
