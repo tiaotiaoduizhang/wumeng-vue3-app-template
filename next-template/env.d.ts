@@ -13,3 +13,9 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+interface ImportMetaEnv {
+  readonly VITE_APP_NAME: string
+  readonly VITE_NUMBER_DEMO: number
+  readonly VITE_BOOLEAN_DEMO: boolean
+}

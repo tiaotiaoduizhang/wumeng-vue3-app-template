@@ -11,7 +11,8 @@
 */
 import { fileURLToPath, URL } from 'node:url'
 import path from 'node:path'
-import { defineConfig } from 'vite'
+//vite.config.ts 中访问环境变量，需要使用 loadEnv 函数
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import UnoCSS from 'unocss/vite'
@@ -36,13 +37,16 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import Components from 'unplugin-vue-components/vite'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { viteMockServe } from 'vite-plugin-mock'
-export default defineConfig(({ mode: _mode }) => {
+export default defineConfig(({ mode }) => {
   /**
    * 在配置中使用环境变量
    * 第一个参数 mode 表示当前的模式（例如 'development' 或 'production'）。
    * 第二个参数 process.cwd() 表示当前工作目录，通常是项目根目录。
-   * 如果需要读取 .env 文件，建议只读取 VITE_ 前缀变量，并避免打印敏感信息。
+   * 第三个参数是环境变量前缀，默认为 VITE_。如果设置为空字符串，则会加载所有环境变量
    */
+  const env = loadEnv(mode, process.cwd(), 'VITE_')
+  //打印在终端看
+  console.log(env)
   return {
     plugins: [
       VueI18nPlugin({
@@ -67,7 +71,7 @@ export default defineConfig(({ mode: _mode }) => {
           /\.vue\.[tj]sx?\?vue/, // .vue (vue-loader with experimentalInlineMatchResource enabled)
           /\.md$/, // .md
         ],
-        dirs: ['src/il8n'],
+        dirs: ['src/il8n', 'src/utils'],
         imports: ['vue', VueRouterAutoImports, 'pinia', '@vueuse/core'],
       }),
       VueRouter({

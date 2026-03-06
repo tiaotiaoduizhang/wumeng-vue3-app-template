@@ -108,6 +108,13 @@
     2）.env.[mode]
     3）.env.local
     4）.env
+   - vite.config.ts 中获取环境变量
+     - 根据不同环境加载不同插件
+     - 该文件中不能使用 import.meta.env 获取环境变量 
+     - 1.vite.config.ts 是在 Node.js 环境中运行的，默认使用 CommonJS 模块规范
+     - 2.import.meta.nev 是 ES 模块的内置变量，运行在浏览器环境。
+     - 3.vite.config.ts 是在 Vite启动的早期阶段执行，此时 Vite 还没有完全加载和处理环境变量
+     - 4.import.meta.env 是 Vite 在构建过程中注入到最终代码中的，只能在构建后的代码中可以使用
 
  # 国际化（vue i18n）
  - 地址：https://vue-i18n.intlify.dev
@@ -180,3 +187,6 @@
   - [Vite 适配的 Mock 插件](https://github.com/vbenjs/vite-plugin-mock/blob/main/README.zh_CN.md)
   - 验证：http://192.168.30.77:5174/api/demo 
   看见分页数据，mock服务成功
+
+#axios二次封装
+[中文网链接](https://axios-http.com/zh/docs/req_config)

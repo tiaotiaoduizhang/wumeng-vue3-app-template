@@ -8,6 +8,9 @@
 - [x] 理解 Mock.js `@ctitle(5, 10)` 语法含义 <!-- id: 3 -->
 - [x] 理解 mock/demo.ts 中 success 与 error 的返回封装 <!-- id: 4 -->
 - [x] 为 mock/demo.ts 的 success/error 添加注释 <!-- id: 5 -->
+- [x] 理解 AxiosInstance 与 AxiosRequestConfig 含义 <!-- id: 6 -->
+- [x] 定位 AxiosInstance/AxiosRequestConfig 的官方文档与类型定义位置 <!-- id: 7 -->
+- [x] 使用 ?? 简化 Env.getBoolean 默认值逻辑 <!-- id: 8 -->
 - 重构路由配置，采用 installRouter方法实现模块化注册 去掉 main.ts中 pinia 和 router 的相关代码
 - 封装 Pinia （1.创建 Pinia 实例，并配置持久化插件  2.将 Pinia 实例注册到 Vue 应用中）
 - npm list @iconify/json 查看是否安装
