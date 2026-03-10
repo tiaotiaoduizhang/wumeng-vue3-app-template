@@ -4,7 +4,12 @@
  * 响应拦截器  （成功&失败）
  */
 
-import { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, AxiosError } from 'axios'
+import axios, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  AxiosError,
+} from 'axios'
 import { Env } from '@/utils/env'
 import type { InterceptorConfig } from './type'
 
@@ -54,19 +59,33 @@ export const defaultResponseOnFulfilled = (response: AxiosResponse): any => {
 }
 
 // 默认响应拦截器-失败处理函数
-export const defaultResponseOnRejected = (error: AxiosError): any => {
+export const defaultResponseOnRejected = (error: AxiosError | any): any => {
+  /**
+   *  处理取消请求
+   * - 捕获异常 ：当请求被取消时，Axios 会 reject 一个 CanceledError 。
+   * - 判断类型 ： defaultResponseOnRejected 会被调用。
+   * - 优先处理 ：第一步就是检查 axios.isCancel(error) 。
+   * - 如果是取消 ：打印一条普通的 Log ( Request canceled: canceled )，然后直接 Promise.reject(error) 返回。 后续的 console.log('Response Error:', error) 及其它红色报错逻辑都不会执行 。
+   * - 如果是其他错误 ：继续往下执行，打印红色 Error。
+   */
+
+  if (axios.isCancel(error)) {
+    console.log('Request canceled:', error.message)
+    return Promise.reject(error)
+  }
+
   console.log('Response Error:', error)
   // 错误处理
   if (error.response) {
     // 服务器返回错误状态码
     const status = error.response.status
-    console.error('request error, status: ', status)
+    console.log('request error, status: ', status)
   } else if (error.request) {
     // 请求已发出，但没有收到响应
-    console.error('Network Error')
+    console.log('Network Error')
   } else {
     // 请求配置错误
-    console.error('Request Config Error:', error.message)
+    console.log('Request Config Error:', error.message)
   }
   return Promise.reject(error)
 }

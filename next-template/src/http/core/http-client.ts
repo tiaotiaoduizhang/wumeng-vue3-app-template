@@ -7,6 +7,8 @@ import { Env } from '@/utils/env.ts'
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios'
 import { Interceptors } from './interceptors'
 import type { HttpClientConfig, InterceptorConfig } from './type'
+import { PluginManager } from './plugin-manager'
+import { RequestCanceler } from './request-canceler'
 // HTTP请求客户端的默认配置
 const defaultConfig: HttpClientConfig = {
   baseURL: Env.get('VITE_API_BASE_URL', '/api'),
@@ -20,11 +22,16 @@ const defaultConfig: HttpClientConfig = {
  * HttpClient 基础 HTTP 客户端类
  * 负责创建 Axios 实例和封装基础请求方法
  * @constructor   （受保护） 对外封装细节，对内开发扩展
+ * @private 私有
  */
 export class HttpClient {
   protected instance: AxiosInstance
   protected config: HttpClientConfig
   private readonly interceptors: Interceptors
+  // 插件管理器
+  private readonly pluginManager: PluginManager
+  // 请求取消器
+  private readonly requestCanceler: RequestCanceler
   /**
    * 构造函数
    * @param config 配置选项
@@ -40,11 +47,37 @@ export class HttpClient {
     // this.requestCanceler = new RequestCanceler()
     // 2.创建 Axios 实例
     this.instance = this.createInstance()
+    // 插件管理器
+    this.pluginManager = new PluginManager()
+    // 请求取消器
+    this.requestCanceler = new RequestCanceler()
+    this.registerPlugins()
     // 设置拦截器
     this.setInterceptors()
   }
+  private registerPlugins() {
+    // 根据配置注册插件
+    if (this.config.enableCancel) {
+      this.pluginManager.register(this.requestCanceler)
+    } // 应用所有插件
+    this.pluginManager.applyAll(this.instance)
+  }
   private setInterceptors() {
     this.interceptors.applyInterceptors(this.instance)
+  }
+  /**
+   * 取消所有请求
+   */
+  public cancelAll(): void {
+    console.log('取消所有请求9999')
+    this.requestCanceler.clear()
+  }
+  /**
+   * 获取插件管理器
+   * 便于后续动态添加或移除插件
+   */
+  public getPluginManager(): PluginManager {
+    return this.pluginManager
   }
   /**
    * 创建 Axios 实例

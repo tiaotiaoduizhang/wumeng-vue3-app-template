@@ -12,6 +12,7 @@ const customRequestOnFulfilled = (config: AxiosRequestConfig) => {
 }
 //创建并导出HttpClient对象api
 export const api = new HttpClient({
+  enableCancel: true,
   interceptor: {
     request: {
       onFulfilled: customRequestOnFulfilled,

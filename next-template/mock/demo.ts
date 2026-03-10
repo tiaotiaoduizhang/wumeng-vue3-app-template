@@ -49,7 +49,7 @@ const demoMock: MockMethod[] = [
     // 接口地址：分页查询数据
     url: '/api/demo',
     method: 'get',
-    // timeout: 1000,
+    timeout: 2000,
     // 响应处理函数：接收请求参数，返回模拟数据
     response: ({ query }) => {
       // 解析分页参数：页码，默认值 1

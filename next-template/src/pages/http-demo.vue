@@ -28,10 +28,15 @@
         </button>
       </div>
     </div>
+    <!-- 测试按钮 -->
+    <div class="mt-4">
+      <button @click="onTestCancelAllRequests" class="ml-2">测试取消全部请求</button>    
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { api } from '@/http'
 import { type Demo, type DemoListReq, demoService } from '@/services/demo-service.ts'
 const loading = ref(false)
 const error = ref<Error | null>(null)
@@ -68,11 +73,20 @@ const deleteItem = async (id: number) => {
   await demoService.delete(id) // 重新获取数据
   await fetchData()
 }
-
+const onTestCancelAllRequests = async () => {
+  console.log('开始测试取消全部请求')
+  // 发送多个请求
+  for (let i = 0; i < 3; i++) {
+    fetchData({ pageNum: i + 1 })
+  }
+  // 1秒后取消所有请求
+  setTimeout(() => {
+    console.log('所有请求已取消', api.cancelAll())
+    api.cancelAll()
+  }, 1000)
+}
 // 组件挂载时获取数据
 onMounted(() => {
   fetchData()
 })
 </script>
-
-<style scoped></style>

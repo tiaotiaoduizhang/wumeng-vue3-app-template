@@ -104,93 +104,123 @@
     - uat 验收环境（用户测试版本） uat≈prod，但流程更规范
   - package.json 解释 "build:uat": "run-p type-check \"build-only {@} --mode uat\" --", - run-p 并行运行多个任务 - 复用逻辑：build-only 只负责调用 Vite 构建，不需要关心是哪个环境。- 统一检查：所有构建命令都强制带上 type-check ，防止“能运行但类型错误”的代码混入生产环境。- 灵活传参 : 通过 {@} 机制，你甚至可以在命令行临时覆盖参数，比如 npm run build -- --sourcemap ， 这个 --sourcemap` 会被透传给 Vite。
     - 优先级依次为：
-    1）.env.[mode].local
-    2）.env.[mode]
-    3）.env.local
-    4）.env
-   - vite.config.ts 中获取环境变量
-     - 根据不同环境加载不同插件
-     - 该文件中不能使用 import.meta.env 获取环境变量 
-     - 1.vite.config.ts 是在 Node.js 环境中运行的，默认使用 CommonJS 模块规范
-     - 2.import.meta.nev 是 ES 模块的内置变量，运行在浏览器环境。
-     - 3.vite.config.ts 是在 Vite启动的早期阶段执行，此时 Vite 还没有完全加载和处理环境变量
-     - 4.import.meta.env 是 Vite 在构建过程中注入到最终代码中的，只能在构建后的代码中可以使用
+      1）.env.[mode].local
+      2）.env.[mode]
+      3）.env.local
+      4）.env
+  - vite.config.ts 中获取环境变量
+    - 根据不同环境加载不同插件
+    - 该文件中不能使用 import.meta.env 获取环境变量
+    - 1.vite.config.ts 是在 Node.js 环境中运行的，默认使用 CommonJS 模块规范
+    - 2.import.meta.nev 是 ES 模块的内置变量，运行在浏览器环境。
+    - 3.vite.config.ts 是在 Vite启动的早期阶段执行，此时 Vite 还没有完全加载和处理环境变量
+    - 4.import.meta.env 是 Vite 在构建过程中注入到最终代码中的，只能在构建后的代码中可以使用
 
- # 国际化（vue i18n）
- - 地址：https://vue-i18n.intlify.dev
- - src/i18n/
-    |- index.ts        # 国际化配置文件
-    |- locales/        # 语言包目录
-      |- zh-CN.ts     # 通用中文语言包
-      |- en-US.ts     # 通用英文语言包
-      |- modules/      # 模块语言包
-        |- en-US/     # 模块英文语言包
-           |- demo.ts    # 测试模块
-           |- ... 其他模块的英文
-        |- zh-CN/     # 模块中文语言包
-           |- demo.ts    # 测试模块
-           |- ... 其他模块的中文
-在template中可以使用 $t 函数进行翻译
+# 国际化（vue i18n）
 
- # 国际化 企业级开发 插件
- @intlify/unplugin-vue-i18n
- - 路由级别的懒加载：
-   - 根据当前路由动态加载对应的语言模块。
- - 实现语言的动态切换和持久化并实现语言包的动态懒加载和路由级别的按需加载  
+- 地址：https://vue-i18n.intlify.dev
+- src/i18n/
+      |- index.ts        # 国际化配置文件
+     |- locales/        # 语言包目录
+        |- zh-CN.ts     # 通用中文语言包
+        |- en-US.ts     # 通用英文语言包
+        |- modules/      # 模块语言包
+          |- en-US/     # 模块英文语言包
+             |- demo.ts    # 测试模块
+             |- ... 其他模块的英文
+          |- zh-CN/     # 模块中文语言包
+             |- demo.ts    # 测试模块
+             |- ... 其他模块的中文
+  在template中可以使用 $t 函数进行翻译
 
-# 网络请求 
-  - 封装架构设计
-  - 搭建mock服务
-  - axios和拦截器封装
-  - 实现取消请求和请求防重
-  - 实现请求重试
-  - useRequest封装
-  - Alova 和 Axios对比
-    - Alova 
-    - 链接：https://alova.vscing.com/examples
-    - 总结：前端专属库，聚焦前端业务场景，内置hooks，适配现在前端框架，主要适配浏览器端
-    - Axios
-    |- mock   //1.Mock服务:模拟后端接口
-        |-demo.ts
+# 国际化 企业级开发 插件
+
+@intlify/unplugin-vue-i18n
+
+- 路由级别的懒加载：
+  - 根据当前路由动态加载对应的语言模块。
+- 实现语言的动态切换和持久化并实现语言包的动态懒加载和路由级别的按需加载
+
+# 网络请求
+
+- 封装架构设计
+- 搭建mock服务
+- axios和拦截器封装
+- 实现取消请求和请求防重
+- 实现请求重试
+- useRequest封装
+- Alova 和 Axios对比
+  - Alova
+  - 链接：https://alova.vscing.com/examples
+  - 总结：前端专属库，聚焦前端业务场景，内置hooks，适配现在前端框架，主要适配浏览器端
+  - Axios
+    |- mock //1.Mock服务:模拟后端接口
+    |-demo.ts
     |- src
-        |-http  //3.项目配置层 （导出具体axios实例对象和CRUD函数，service层通过它调用后端接口）
-           |- core  //2.请求核心封装 （拦截器、取消请求、请求去重、重试，每个功能都是一个独立类）
-               |- http-clicent.ts
-               |- http-interceptors.ts
-               |- index.ts
-               |- types.ts
-            |- index.ts
-        |-services //server层 （调用具体接口）
-            |- base-service.ts
-      +---------------------+
-      | service层 (API 定义) |
-      +---------------------+
-                ↑
-                | 调用
-      +---------------------+
-      | 项目配置层 (自定义)    |
-      +---------------------+
-                ↑
-                | 实例化
-      +---------------------+
-      | 请求核心封装 (通用功能) |
-      +---------------------+
-                ↑
-                | 依赖
-      +---------------------+
-      |  Axios 原生库        |
-      +---------------------+
-  # 使用mockjs搭建mock服务
-  - 指令:pnpm add mockjs @types/mockjs vite-plugin-mock -D
-  - [核心模拟数据库](http://mockjs.com/)
-  - [MockJS 的 TypeScript 类型定义](https://github.com/nuysoft/Mock/wiki/Getting-Started)
-  - [Vite 适配的 Mock 插件](https://github.com/vbenjs/vite-plugin-mock/blob/main/README.zh_CN.md)
-  - 验证：http://192.168.30.77:5174/api/demo 
+    |-http //3.项目配置层 （导出具体axios实例对象和CRUD函数，service层通过它调用后端接口）
+    |- core //2.请求核心封装 （拦截器、取消请求、请求去重、重试，每个功能都是一个独立类）
+    |- http-clicent.ts
+    |- http-interceptors.ts
+    |- index.ts
+    |- types.ts
+    |- index.ts
+    |-services //server层 （调用具体接口）
+    |- base-service.ts
+    +---------------------+
+    | service层 (API 定义) |
+    +---------------------+
+              ↑
+              | 调用
+    +---------------------+
+    | 项目配置层 (自定义)    |
+    +---------------------+
+              ↑
+              | 实例化
+    +---------------------+
+    | 请求核心封装 (通用功能) |
+    +---------------------+
+              ↑
+              | 依赖
+    +---------------------+
+    |  Axios 原生库        |
+    +---------------------+
+
+# 使用mockjs搭建mock服务
+
+- 指令:pnpm add mockjs @types/mockjs vite-plugin-mock -D
+- [核心模拟数据库](http://mockjs.com/)
+- [MockJS 的 TypeScript 类型定义](https://github.com/nuysoft/Mock/wiki/Getting-Started)
+- [Vite 适配的 Mock 插件](https://github.com/vbenjs/vite-plugin-mock/blob/main/README.zh_CN.md)
+- 验证：http://192.168.30.77:5174/api/demo
   看见分页数据，mock服务成功
 
 #axios二次封装
 [中文网链接](https://axios-http.com/zh/docs/req_config)
 
-service层封装 
+service层封装
 很多开源项目里面的api，这个模块只负责封装接口调用，没有业务逻辑 和api调用一样
 包含了响应解析的处理或其他逻辑，这一层为 service- 服务层，包含其他逻辑处理，不仅仅是调用接口
+
+# 实现取消请求（兜底方案）
+思考：
+- 防抖 / 节流和取消请求有什么区别：
+  - 防抖 / 节流（请求前） + 取消请求（请求后：兜底方案）
+  - 防抖/节流 ：主要为了 减轻服务器压力 和 防止前端函数频繁执行 。它们是**“预防”**措施。
+  - RequestCanceler ：主要为了 保证数据一致性 （解决竞态问题）。它是**“补救”**措施。
+  - 大厂技术规范通用最佳实践
+
+- 页面跳转时之前的请求还未完成，需要取消这些请求
+  - 浏览器默认并不会在页面跳转时自动取消正在进行的 Ajax/Fetch 请求 （除非是页面刷新或跳转到全新的 URL，导致整个 JS 运行环境被销毁）。
+  - vue是单页面应用，路由切换是假的，只是js改变了url，并卸载旧组件，挂载新组件
+  - 网络请求是独立的，发出的请求是泼出去的水，组件卸载，请求依然在后台跑
+- 搜索框输入时，需要取消之前的搜索请求，只保留最新的
+- 用户操作取消时，需要终止正在进行的请求
+
+# 核心层 -插件化构架
+
+- 定义插件接口
+  所有网络请求相关功能（取消，防重，重试等）都将作为插件，实现该接口
+  - Axios 支持取消请求 （https://axios-http.com/zh/docs/cancellation）
+    在 v0.22.0 之前，使用 CancelToken，但之后的版本已弃用该 API，而是使用 AbortController方式来实现取消：
+  - AbortController 是浏览器原生 API，用于取消网络请求等异步操作，是处理请求取消的标准方案
+    （https://developer.mozilla.org/en-US/docs/Web/API/AbortController）
