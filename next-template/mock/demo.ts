@@ -36,12 +36,20 @@ export function error(message: string, _code: number = 500): ApiResp<null> {
   }
 }
 // CRUD 操作：分页查询、根据 ID 查询、新增、更新、删除
+/**
+ * Mock 的 timeout
+ * 作用 : 假装服务器很慢。比如设置 3000 ，Mock 就会故意卡 3 秒钟再给你数据。
+ * Axios 的 timeout (请求限时) :
+ * 目的 : 防止请求无限等待，超过 3 秒没结果就直接报错“不玩了”。
+ * 两个都设置成了 3000ms
+ * Mock 发货的那一瞬间，Axios 刚好判定超时，直接抛出 timeout of 3000ms exceeded 错误
+ */
 const demoMock: MockMethod[] = [
   {
     // 接口地址：分页查询数据
     url: '/api/demo',
     method: 'get',
-    timeout: 1000,
+    // timeout: 1000,
     // 响应处理函数：接收请求参数，返回模拟数据
     response: ({ query }) => {
       // 解析分页参数：页码，默认值 1
@@ -69,8 +77,9 @@ const demoMock: MockMethod[] = [
     // 接口地址：根据 ID 查询单条数据（:id 是动态路由参数）
     url: '/api/demo/:id',
     method: 'get',
-    timeout: 3000,
+    // timeout: 1000,
     response: ({ query }) => {
+      console.log('query:', query)
       const item = demoList.find((item) => item.id === parseInt(query.id))
       if (item) {
         return success(item)

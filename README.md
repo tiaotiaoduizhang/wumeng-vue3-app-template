@@ -190,3 +190,7 @@
 
 #axios二次封装
 [中文网链接](https://axios-http.com/zh/docs/req_config)
+
+service层封装 
+很多开源项目里面的api，这个模块只负责封装接口调用，没有业务逻辑 和api调用一样
+包含了响应解析的处理或其他逻辑，这一层为 service- 服务层，包含其他逻辑处理，不仅仅是调用接口
