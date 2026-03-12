@@ -19,7 +19,11 @@ export abstract class BaseService<T, Q extends PageReq> {
   //   分页查询（  送货：我知道怎么送，只要你告诉我小区名）
   public getList(params: Q): Promise<PageData<T>> {
     // 自动拼装地址：/小区名/list
-    return api.get(`/${this.getPrefix()}`, { params })
+    // 禁用特定请求的防重
+    return api.get(`/${this.getPrefix()}`, {
+      params,
+      // disableDedup: true,
+    })
   }
   // 获取详情
   public getDetail(id: number): Promise<T> {
@@ -32,7 +36,7 @@ export abstract class BaseService<T, Q extends PageReq> {
   public update(id: number, data: Partial<T>): Promise<T> {
     return api.put(`/${this.getPrefix()}/${id}`, data)
   }
-//   删除
+  //   删除
   public delete(id: number): any {
     return api.delete(`/${this.getPrefix()}/${id}`)
   }

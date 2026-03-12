@@ -30,7 +30,10 @@
     </div>
     <!-- 测试按钮 -->
     <div class="mt-4">
-      <button @click="onTestCancelAllRequests" class="ml-2">测试取消全部请求</button>    
+      <button @click="onTestCancelAllRequests" class="ml-2">测试取消全部请求</button>
+      <button ref="refreshBtnRef" @click="onRefreshBtnClick">刷新数据</button>
+      <button @click="onTestDeduplication" class="ml-2">测试请求防重</button>
+      <button @click="onTestRetry" class="ml-2">测试请求重试</button>
     </div>
   </div>
 </template>
@@ -44,6 +47,7 @@ const data = ref<Demo[]>([])
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
+const refreshBtnRef = useTemplateRef('refreshBtnRef') //新写法
 const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 // 获取数据
 const fetchData = async (params?: Partial<DemoListReq>) => {
@@ -81,9 +85,28 @@ const onTestCancelAllRequests = async () => {
   }
   // 1秒后取消所有请求
   setTimeout(() => {
-    console.log('所有请求已取消', api.cancelAll())
+    console.log('所有请求已取消', api)
     api.cancelAll()
   }, 1000)
+}
+const onRefreshBtnClick = async () => {
+  console.log('点击刷新按钮')
+  fetchData({ pageNum: 1 })
+}
+const onTestDeduplication = async () => {
+  console.log('开始测试请求防重')
+  for (let i = 0; i < 10; i++) {
+    refreshBtnRef.value?.click()
+  }
+}
+const onTestRetry = async () => {
+  console.log('开始测试请求重试')
+  try {
+    const response = await demoService.getList({ pageNum: 1, pageSize: 10 })
+    console.log('请求成功，返回数据:', response)
+  } catch (error) {
+    console.error('请求失败:', error)
+  }
 }
 // 组件挂载时获取数据
 onMounted(() => {

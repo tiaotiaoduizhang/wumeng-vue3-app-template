@@ -1,3 +1,5 @@
 export * from './type'
 export * from './http-client'
 export * from './interceptors'
+export * from './request-dedup'
+// export * from './request-retry'

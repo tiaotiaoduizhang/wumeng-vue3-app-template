@@ -9,6 +9,10 @@ import { Interceptors } from './interceptors'
 import type { HttpClientConfig, InterceptorConfig } from './type'
 import { PluginManager } from './plugin-manager'
 import { RequestCanceler } from './request-canceler'
+//导入防重插件
+import { RequestDedup } from './request-dedup'
+//导入重试插件
+import { RequestRetry } from './request-retry'
 // HTTP请求客户端的默认配置
 const defaultConfig: HttpClientConfig = {
   baseURL: Env.get('VITE_API_BASE_URL', '/api'),
@@ -16,6 +20,9 @@ const defaultConfig: HttpClientConfig = {
   headers: {
     'Content-Type': 'application/json;charset=utf-8',
   },
+  enableDedup: true, // 默认开启防重功能
+  enableCancel: true, // 默认开启请求取消功能
+  enableRetry: true, // 默认开启请求重试功能
 }
 
 /**
@@ -32,6 +39,10 @@ export class HttpClient {
   private readonly pluginManager: PluginManager
   // 请求取消器
   private readonly requestCanceler: RequestCanceler
+  // 请求防重器
+  private readonly requestDedup: RequestDedup
+  // 请求重试器
+  private readonly requestRetry: RequestRetry
   /**
    * 构造函数
    * @param config 配置选项
@@ -51,15 +62,31 @@ export class HttpClient {
     this.pluginManager = new PluginManager()
     // 请求取消器
     this.requestCanceler = new RequestCanceler()
+    // 请求防重器
+    this.requestDedup = new RequestDedup()
+    // 请求重试器
+    this.requestRetry = new RequestRetry(this.config.retryConfig)
     this.registerPlugins()
     // 设置拦截器
     this.setInterceptors()
   }
   private registerPlugins() {
-    // 根据配置注册插件
+    // 根据配置注册插件enableCancel和enableDedup是互斥，防重优先
+    // 1. 先注册 Cancel (它会后执行)
     if (this.config.enableCancel) {
       this.pluginManager.register(this.requestCanceler)
-    } // 应用所有插件
+    }
+    // 2. 后注册 Dedup (它会先执行)
+    // 这样可以保证当 Dedup 拦截到重复请求时，直接取消新请求，
+    // 从而阻止请求进入 Cancel 插件，避免 Cancel 误杀旧请求。
+    if (this.config.enableDedup) {
+      this.pluginManager.register(this.requestDedup)
+    }
+    // 3.重试配置
+    if (this.config.enableRetry) {
+      this.pluginManager.register(this.requestRetry)
+    }
+    // 应用所有插件
     this.pluginManager.applyAll(this.instance)
   }
   private setInterceptors() {
