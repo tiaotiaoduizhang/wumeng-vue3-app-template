@@ -286,3 +286,8 @@ vueuse：https://vueuse.nodejs.cn/core/useFetch/
 - 依赖追踪
 当响应式依赖发生变化时，自动重新请求
 
+还需要优化其他点：
+- API 调用逻辑封装到服务层（demo-service.ts），也就是其他开源项目中的api,组件中使用 useRequest直接调用服务层方法，这样可以更好地分离关注点
+- 继续扩展和优化：如缓存，轮询，防抖节流
+
+# 构建优化配置

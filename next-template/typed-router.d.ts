@@ -51,6 +51,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/http-useRequest': RouteRecordInfo<
+      '/http-useRequest',
+      '/http-useRequest',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
   }
 
   /**
@@ -85,6 +92,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/http-demo.vue': {
       routes:
         | '/http-demo'
+      views:
+        | never
+    }
+    'src/pages/http-useRequest.vue': {
+      routes:
+        | '/http-useRequest'
       views:
         | never
     }
