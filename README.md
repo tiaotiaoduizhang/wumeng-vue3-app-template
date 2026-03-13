@@ -277,17 +277,125 @@ service层封装
 ahooks：https://ahooks.js.org/hooks/use-request/index
 vueuse：https://vueuse.nodejs.cn/core/useFetch/
 网络请求涉及到很多状态，如loading状态的控制，错误信息的判断等，而这些逻辑几乎在每个请求中都涉及。该函数将这些逻辑进行抽离，在组件中直接使用
+
 - 自动状态管理： loading、error、data等响应式状态
   const { loading, error, data } = useRequest(reqService, config)
 - 自动请求：
-组件自动挂载是，自动发请求
+  组件自动挂载是，自动发请求
 - 手动触发：
-提供手动执行请求run 方法
+  提供手动执行请求run 方法
 - 依赖追踪
-当响应式依赖发生变化时，自动重新请求
+  当响应式依赖发生变化时，自动重新请求
 
 还需要优化其他点：
+
 - API 调用逻辑封装到服务层（demo-service.ts），也就是其他开源项目中的api,组件中使用 useRequest直接调用服务层方法，这样可以更好地分离关注点
 - 继续扩展和优化：如缓存，轮询，防抖节流
 
 # 构建优化配置
+
+VITE构建优化生产环境配置
+
+- 优化打包后的资源
+- 优化打包过程
+
+生产环境 prod生效，如关闭sourceMap、代码混淆等打包构建优化都在 vite.config.ts文件中进行
+
+# 代码压缩和代码混淆
+
+- build.minify
+
+* 代码压缩 （减小 JavaScript、CSS 和 HTML 文件的体积，从而减少网络传输时间、降低带宽消耗、提高页面加载速度的过程。压缩的是代码的体积（如移除空白字符、注释、不执行的代码；各种名称替换、折叠常量等等），不压缩性能。）
+  链接：(https://cn.vitejs.dev/config/build-options#build-minify)
+  - terser （超级老牌，压缩效果，支持压缩选项多，构建速度较慢，需安装依赖）
+  - false （不代码压缩）
+* 代码混淆：浏览器无法看懂或扒拉到你的代码
+  （渗透测试，扒拉出代码来执行，从而篡改请求参数）
+
+推荐：terser 不仅支持压缩，还支持混淆（如变量名、函数名等），可以有效防止代码被扒拉和篡改。
+
+- 安装Terser依赖
+  pnpm add terser -D
+
+* build.sourcemap
+  把打包压缩后的代码映射回未打包的原始源代码
+  核心作用：方便调试（否则调试时只能看到混淆后的代码，无法定位问题）
+  生产环境关闭它主要有三个核心原因：1.代码安全性：浏览器开发者工具（F12 -> Sources）直接还原出你的 源代码2.构建性能：减少打包时间，减轻ci/cd服务器压力3.文件体积与带宽影响
+* build.terserOptions （传递给 Terser 的更多 minify 选项。）
+
+# 资源压缩
+ compression({})
+- 除了代码压缩，对构建产物进行Gzip/Brotli 压缩，进一步减少传输体积，集成 vite-plugin-compression2插件可以自动生成压缩文件：.gz（Gzip）或.br（Brotli），压缩后的文件体积会更小，网络传输更快
+- 注意：https://github.com/nonzzz/vite-plugin-compression 这个看看ngnix配置，如何开启gzip/brotli压缩
+- 安装依赖：
+  pnpm add vite-plugin-compression2 -D
+
+# 图片优化
+
+ViteImageOptimizer({}),
+可以集成图片优化插件，实现图片的自动压缩和图片格式的转换。
+链接：https://www.npmjs.com/package/vite-plugin-image-optimizer
+安装依赖：pnpm add vite-plugin-image-optimizer -D
+
+# 依赖优化选项 （optimizeDeps ）
+
+依赖预构建优化，解决浏览器原生ES模块的兼容性问题，提升依赖加载速度
+
+- optimizeDeps.include
+  optimizeDeps: {
+  include: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+  },
+  Vite 会在项目启动时，主动提前预构建这 4 个核心依赖：（Vue3 官方推荐的最佳实践配置）
+  1.vue → 核心框架
+  2.vue-router → 路由
+  3.pinia → 状态管理
+  4.@vueuse/core → Vue 工具库
+  核心好处：1.避免首次页面卡顿（Vite 默认是懒加载依赖，页面第一次运行时才去编译依赖。）2.避免热更新时重新编译 3.解决潜在的依赖加载异常
+
+# 输出目录文件配置
+
+<!-- 全部是 Vite 默认值 -->
+
+export default defineConfig({
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    assetsInlineLimit: 4096,
+    reportCompressedSize: true,
+    // ...
+  },
+})
+
+# css 代码分割（默认开启）
+
+将 CSS 代码分割成多个独立的文件，而不是将所有 CSS 都打包到一个大文件中。这样一来，首次访问时只交在当前页面所需的 CSS。
+build: {
+      cssCodeSplit: true,
+    },
+
+# js代码分割
+
+1.通过manualChunks 配置项对js代码进行手动代码分割配置，即不将所有js打包到大文件，也不让vite自动决定分割策略2.在下面配置中，vendor 自定义文件块名称，自己定义后面数组为需要打包到这个块中的依赖包3.通过配置将vite核心库，路由，状态管理打包到一个独立文件中，而将应用的业务代码打包到其他独立的文件中，实现业务代码分离
+manualChunks: {
+        vendor: ['vue', 'vue-router', 'pinia'],
+},
+
+# 兼容性处理
+Vite 官方提供的兼容性处理插件，可解决现代前端代码在旧浏览器中运行的问题
+指令：pnpm add @vitejs/plugin-legacy -D
+链接：https://www.npmjs.com/package/@vitejs/plugin-legacy
+legacy({
+        targets: ['defaults', 'not IE 11'],
+}),
+
+- defaults：兼容【主流现代浏览器的最近 2 个版本】这是 browserslist 官方默认规则，也是前端最常用、最稳妥的兼容范围。
+- not IE 11 ：明确 不兼容 IE 11 浏览器（Vue3 完全放弃支持 IE11，打包会跳过 IE11 兼容，打包体积更小、速度更快）
+- browserslist 前端浏览器兼容规则标准
+
+# 构建分析插件
+可集成 rollup-plugin-visualizer生成打包分析图。
+链接：https://www.npmjs.com/package/rollup-plugin-visualizer
+安装依赖：pnpm add rollup-plugin-visualizer -D
+
+补充：SVG优化，PWA,CDN等
+PWA 配置（vite-plugin-pwa）：让网站支持 离线访问、桌面图标、安装弹窗、缓存资源。

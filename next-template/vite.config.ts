@@ -37,6 +37,14 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import Components from 'unplugin-vue-components/vite'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { viteMockServe } from 'vite-plugin-mock'
+// 资源压缩插件
+import { compression } from 'vite-plugin-compression2'
+// 图片优化插件
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
+//  兼容性处理
+import legacy from '@vitejs/plugin-legacy'
+// 生成打包分析图
+import { visualizer } from 'rollup-plugin-visualizer'
 export default defineConfig(({ mode }) => {
   /**
    * 在配置中使用环境变量
@@ -45,9 +53,43 @@ export default defineConfig(({ mode }) => {
    * 第三个参数是环境变量前缀，默认为 VITE_。如果设置为空字符串，则会加载所有环境变量
    */
   const env = loadEnv(mode, process.cwd(), 'VITE_')
+  //是否是生产环境
+  const isProd = mode === 'production'
   //打印在终端看
   console.log(env)
   return {
+    build: {
+      // 生产环境下开启代码压缩
+      minify: 'terser',
+      // 生产环境下关闭sourceMap
+      sourcemap: !isProd,
+      terserOptions: isProd
+        ? {
+            // 代码压缩配置
+            compress: {
+              drop_console: true, // 移除 console
+              drop_debugger: true, // 移除 debugger
+            },
+            // 代码混淆配置
+            mangle: {
+              toplevel: true, // 混淆顶层变量名
+              eval: true, // 混淆 eval 中的变量
+            },
+            // 输出配置
+            format: {
+              comments: false, //压缩 / 混淆后的输出代码中，不保留任何注释
+            },
+          }
+        : {},
+      rollupOptions: {
+        output: {
+          // 手动代码分割配置
+          manualChunks: {
+            vendor: ['vue', 'vue-router', 'pinia'],
+          },
+        },
+      },
+    },
     plugins: [
       VueI18nPlugin({
         // 语言包目录
@@ -77,7 +119,6 @@ export default defineConfig(({ mode }) => {
       VueRouter({
         /* options */
       }),
-
       /* VueRouter() 插件需要在 Vue() 插件之前进行注册也需要在Layouts之前 */
       Layouts({
         layoutsDirs: 'src/layouts', // 指定布局文件的目录路径
@@ -104,6 +145,33 @@ export default defineConfig(({ mode }) => {
          */
         symbolId: 'icon-[dir]-[name]',
       }),
+      //gzip压缩
+      compression({
+        algorithms: ['gzip'], //压缩算法类型
+        threshold: 10240, // 超过 10KB 的文件才压缩
+        deleteOriginalAssets: false, // 不删除原文件
+      }),
+      // 图片压缩
+      ViteImageOptimizer({
+        png: {
+          quality: 80,
+        },
+        jpeg: {
+          quality: 80,
+        },
+        webp: {
+          quality: 80,
+        },
+      }),
+      // 兼容性处理
+      legacy({
+        targets: ['defaults', 'not IE 11'],
+      }),
+      // 生成打包分析图
+      visualizer({
+        open: true, // 自动打开浏览器查看分析图
+        filename: 'stats.html',
+      }),
     ],
     resolve: {
       alias: {
@@ -113,6 +181,10 @@ export default defineConfig(({ mode }) => {
     server: {
       // 监听所有地址，包括局域网和公网地址
       host: true,
+    },
+    // 依赖优化选项
+    optimizeDeps: {
+      include: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
     },
   }
 })
